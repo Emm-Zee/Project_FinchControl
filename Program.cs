@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FinchAPI;
 
+
 namespace Project_FinchControl
 {
 
@@ -18,7 +19,7 @@ namespace Project_FinchControl
     // Description: S1 (Talent Show)
     // Author: Emily Crull
     // Dated Created: 10/2/2020
-    // Last Modified:
+    // Last Modified: 10/4/2020
     //
     // **************************************************
 
