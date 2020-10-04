@@ -233,7 +233,7 @@ namespace Project_FinchControl
 
             DisplayHeader("Dance");
 
-            Console.WriteLine("\tThe Finch robot will now boogie!");
+            Console.WriteLine("\tWatch the Finch dance in circles for you!");
            
             DisplayContinuePrompt();
 
@@ -421,7 +421,7 @@ namespace Project_FinchControl
                 }
             
             finchRobot.setLED(255, 0, 0);
-            finchRobot.wait(3600);
+            finchRobot.wait(4000);
             finchRobot.setLED(255, 0, 0);
             finchRobot.wait(300);
             finchRobot.setLED(255, 255, 255);
@@ -452,6 +452,11 @@ namespace Project_FinchControl
             finchRobot.wait(300);
             finchRobot.setLED(255, 0, 0);
             finchRobot.wait(300);
+            finchRobot.setLED(255, 255, 255);
+            finchRobot.wait(300);
+
+
+
             finchRobot.setLED(255, 0, 0);
             finchRobot.wait(4600);
             finchRobot.setLED(255, 255, 255);
