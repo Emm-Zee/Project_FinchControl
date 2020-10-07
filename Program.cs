@@ -210,12 +210,16 @@ namespace Project_FinchControl
             DisplayHeader("Light and Sound");
 
             Console.WriteLine("\tThe Finch robot will now show off its glowing talent and play a tune for you!");
-            DisplayContinuePrompt();
+ 
 
-
-            Parallel.Invoke( 
-            () => ExploreLights(finchRobot), 
+            Parallel.Invoke(
+            () => ExploreLights(finchRobot),
             () => Tune(finchRobot));
+
+            DisplayContinuePrompt();
+            Console.Clear();
+
+            DidYouLikeTheFinchSong(finchRobot);
 
             DisplayMenuPrompt("Talent Show Menu");
         }
@@ -234,16 +238,15 @@ namespace Project_FinchControl
             DisplayHeader("Dance");
 
             Console.WriteLine("\tWatch the Finch dance in circles for you!");
-           
+
             DisplayContinuePrompt();
 
             ExploreMovement(finchRobot);
-            
+
             DisplayMenuPrompt("Talent Show Menu");
         }
 
         #endregion
-
 
         #region TALENT SHOW: MIXERS
         /// <summary>
@@ -252,7 +255,7 @@ namespace Project_FinchControl
         /// *****************************************************************
         /// </summary>
         /// <param name="finchRobot">finch robot object</param>
-        static void MixingItUp (Finch finchRobot)
+        static void MixingItUp(Finch finchRobot)
         {
             Console.CursorVisible = false;
 
@@ -415,182 +418,175 @@ namespace Project_FinchControl
         #region TALENT SHOW: LIGHTS
         static void ExploreLights(Finch finchRobot)
         {
-                for (int ledValue = 0; ledValue < 255; ledValue++)
-                {
-                finchRobot.setLED(ledValue, 0, 0);
-                }
-            
-            finchRobot.setLED(255, 0, 0);
-            finchRobot.wait(4000);
-            finchRobot.setLED(255, 0, 0);
-            finchRobot.wait(300);
-            finchRobot.setLED(255, 255, 255);
-            finchRobot.wait(300);
-            finchRobot.setLED(255, 0, 0);
-            finchRobot.wait(300);
-            finchRobot.setLED(255, 255, 255);
-            finchRobot.wait(300);
-            finchRobot.setLED(255, 0, 0);
-            finchRobot.wait(300);
-            finchRobot.setLED(255, 255, 255);
-            finchRobot.wait(300);
-            finchRobot.setLED(255, 0, 0);
-            finchRobot.wait(300);
-            finchRobot.setLED(255, 255, 255);
-            finchRobot.wait(300);
-            finchRobot.setLED(255, 0, 0);
-            finchRobot.wait(300);
-            finchRobot.setLED(255, 255, 255);
-            finchRobot.wait(300);
-            finchRobot.setLED(255, 0, 0);
-            finchRobot.wait(300);
-            finchRobot.setLED(255, 255, 255);
-            finchRobot.wait(300);
-            finchRobot.setLED(255, 0, 0);
-            finchRobot.wait(300);
-            finchRobot.setLED(255, 255, 255);
-            finchRobot.wait(300);
-            finchRobot.setLED(255, 0, 0);
-            finchRobot.wait(300);
-            finchRobot.setLED(255, 255, 255);
-            finchRobot.wait(300);
-
-
-
-            finchRobot.setLED(255, 0, 0);
-            finchRobot.wait(4600);
-            finchRobot.setLED(255, 255, 255);
-            finchRobot.wait(300);
-            finchRobot.setLED(255, 0, 0);
-            finchRobot.wait(300);
-            finchRobot.setLED(255, 255, 255);
-            finchRobot.wait(300);
-            finchRobot.setLED(255, 0, 0);
-            finchRobot.wait(300);
-            finchRobot.setLED(255, 255, 255);
-            finchRobot.wait(300);
-            finchRobot.setLED(255, 0, 0);
-            finchRobot.wait(300);
-            finchRobot.setLED(255, 255, 255);
-            finchRobot.wait(300);
-            finchRobot.setLED(255, 0, 0);
-            finchRobot.wait(300);
-            finchRobot.setLED(255, 255, 255);
-            finchRobot.wait(300);
-            finchRobot.setLED(255, 0, 0);
-            finchRobot.wait(300);
-            finchRobot.setLED(255, 255, 255);
-            finchRobot.wait(300);
-            finchRobot.setLED(255, 0, 0);
-            finchRobot.wait(300);
-            finchRobot.setLED(255, 255, 255);
-            finchRobot.wait(300);
-            finchRobot.setLED(255, 0, 0);
-            finchRobot.wait(300);
-            finchRobot.setLED(255, 255, 255);
-            finchRobot.wait(300);
-            finchRobot.setLED(255, 0, 0);
-            finchRobot.wait(300);
-            finchRobot.setLED(255, 255, 255);
-            finchRobot.wait(300);
-            finchRobot.setLED(255, 0, 0);
-            finchRobot.wait(300);
-            finchRobot.setLED(255, 255, 255);
-            finchRobot.wait(300);
-            finchRobot.setLED(255, 0, 0);
-            finchRobot.wait(3000);
-            for (int ledValue = 255; ledValue > 0; ledValue--)
+            for (int ledValue = 0; ledValue < 255; ledValue++)
             {
-                finchRobot.setLED(ledValue, 0, 0);
+            finchRobot.setLED(ledValue, 0, 0);
             }
 
+        finchRobot.setLED(255, 0, 0);
+        finchRobot.wait(4000);
+        finchRobot.setLED(255, 0, 0);
+        finchRobot.wait(300);
+        finchRobot.setLED(255, 255, 255);
+        finchRobot.wait(300);
+        finchRobot.setLED(255, 0, 0);
+        finchRobot.wait(300);
+        finchRobot.setLED(255, 255, 255);
+        finchRobot.wait(300);
+        finchRobot.setLED(255, 0, 0);
+        finchRobot.wait(300);
+        finchRobot.setLED(255, 255, 255);
+        finchRobot.wait(300);
+        finchRobot.setLED(255, 0, 0);
+        finchRobot.wait(300);
+        finchRobot.setLED(255, 255, 255);
+        finchRobot.wait(300);
+        finchRobot.setLED(255, 0, 0);
+        finchRobot.wait(300);
+        finchRobot.setLED(255, 255, 255);
+        finchRobot.wait(300);
+        finchRobot.setLED(255, 0, 0);
+        finchRobot.wait(300);
+        finchRobot.setLED(255, 255, 255);
+        finchRobot.wait(300);
+        finchRobot.setLED(255, 0, 0);
+        finchRobot.wait(300);
+        finchRobot.setLED(255, 255, 255);
+        finchRobot.wait(300);
+        finchRobot.setLED(255, 0, 0);
+        finchRobot.wait(300);
+        finchRobot.setLED(255, 255, 255);
+        finchRobot.wait(300);
 
-            //for (int ledValue = 255; ledValue > 40; ledValue--)
-            //{
-            //    finchRobot.setLED(ledValue, 0, 0);
-            //}
-            /*}*/
+
+
+        finchRobot.setLED(255, 0, 0);
+        finchRobot.wait(4600);
+        finchRobot.setLED(255, 255, 255);
+        finchRobot.wait(300);
+        finchRobot.setLED(255, 0, 0);
+        finchRobot.wait(300);
+        finchRobot.setLED(255, 255, 255);
+        finchRobot.wait(300);
+        finchRobot.setLED(255, 0, 0);
+        finchRobot.wait(300);
+        finchRobot.setLED(255, 255, 255);
+        finchRobot.wait(300);
+        finchRobot.setLED(255, 0, 0);
+        finchRobot.wait(300);
+        finchRobot.setLED(255, 255, 255);
+        finchRobot.wait(300);
+        finchRobot.setLED(255, 0, 0);
+        finchRobot.wait(300);
+        finchRobot.setLED(255, 255, 255);
+        finchRobot.wait(300);
+        finchRobot.setLED(255, 0, 0);
+        finchRobot.wait(300);
+        finchRobot.setLED(255, 255, 255);
+        finchRobot.wait(300);
+        finchRobot.setLED(255, 0, 0);
+        finchRobot.wait(300);
+        finchRobot.setLED(255, 255, 255);
+        finchRobot.wait(300);
+        finchRobot.setLED(255, 0, 0);
+        finchRobot.wait(300);
+        finchRobot.setLED(255, 255, 255);
+        finchRobot.wait(300);
+        finchRobot.setLED(255, 0, 0);
+        finchRobot.wait(300);
+        finchRobot.setLED(255, 255, 255);
+        finchRobot.wait(300);
+        finchRobot.setLED(255, 0, 0);
+        finchRobot.wait(300);
+        finchRobot.setLED(255, 255, 255);
+        finchRobot.wait(300);
+        finchRobot.setLED(255, 0, 0);
+        finchRobot.wait(3000);
+        for (int ledValue = 255; ledValue > 0; ledValue--)
+        {
+            finchRobot.setLED(ledValue, 0, 0);
+        }
         }
 
-            #endregion
+        #endregion
 
         #region TALENT SHOW: DANCE
-            static void ExploreMovement(Finch finchRobot)
-            {
-                //finchRobot.setMotors(150, 150);
-                //finchRobot.wait(1000);
-                //finchRobot.setMotors(255, 0);
-                //finchRobot.wait(500);
-                //finchRobot.wait(1000);
-                //finchRobot.setMotors(0, 255);
-                //finchRobot.wait(500);
-                //finchRobot.setMotors(150, 150);
-                //finchRobot.wait(1000);
-                //finchRobot.setMotors(255, 0);
-                //finchRobot.wait(500);
-                //finchRobot.setMotors(150, 150);
-                //finchRobot.wait(1000);
-                //finchRobot.setMotors(0, 255);
-                //finchRobot.wait(500);
-                //finchRobot.setMotors(150, 150);
-                //finchRobot.wait(1000);
-                //finchRobot.setMotors(0, 0);
+        static void ExploreMovement(Finch finchRobot)
+        {
+            //finchRobot.setMotors(150, 150);
+            //finchRobot.wait(1000);
+            //finchRobot.setMotors(255, 0);
+            //finchRobot.wait(500);
+            //finchRobot.wait(1000);
+            //finchRobot.setMotors(0, 255);
+            //finchRobot.wait(500);
+            //finchRobot.setMotors(150, 150);
+            //finchRobot.wait(1000);
+            //finchRobot.setMotors(255, 0);
+            //finchRobot.wait(500);
+            //finchRobot.setMotors(150, 150);
+            //finchRobot.wait(1000);
+            //finchRobot.setMotors(0, 255);
+            //finchRobot.wait(500);
+            //finchRobot.setMotors(150, 150);
+            //finchRobot.wait(1000);
+            //finchRobot.setMotors(0, 0);
 
 
-                finchRobot.setMotors(200, 125);
-                finchRobot.wait(10000);
-                finchRobot.setMotors(100, 62);
-                finchRobot.wait(15000);
-                finchRobot.setMotors(200, 125);
-                finchRobot.wait(10000);
-                finchRobot.setMotors(0, 0);
+            finchRobot.setMotors(200, 125);
+            finchRobot.wait(10000);
+            finchRobot.setMotors(100, 62);
+            finchRobot.wait(15000);
+            finchRobot.setMotors(200, 125);
+            finchRobot.wait(10000);
+            finchRobot.setMotors(0, 0);
 
-            }
-            #endregion
+        }
+        #endregion
 
         #region TALENT SHOW: DATA RECORDER
-            static void DataRecorderDisplayMenuScreen(Finch finchRobot)
-            {
-                DisplayHeader("Data Recorder");
-                Console.WriteLine();
-                Console.WriteLine();
-                Console.WriteLine();
-                Console.WriteLine("\t(Currently under development.)");
-                Console.WriteLine();
-                Console.WriteLine();
-                Console.WriteLine();
-                DisplayContinuePrompt();
-            }
-            #endregion
+        static void DataRecorderDisplayMenuScreen(Finch finchRobot)
+        {
+            DisplayHeader("Data Recorder");
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("\t(Currently under development.)");
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            DisplayContinuePrompt();
+        }
+        #endregion
 
         #region TALENT SHOW: ALARM SYSTEM
-            static void AlarmSystemDisplayMenuScreen(Finch finchRobot)
-            {
-                DisplayHeader("Alarm System");
-                Console.WriteLine();
-                Console.WriteLine();
-                Console.WriteLine();
-                Console.WriteLine("\t(Currently under development.)");
-                Console.WriteLine();
-                Console.WriteLine();
-                Console.WriteLine();
-                DisplayContinuePrompt();
-            }
-            #endregion
+        static void AlarmSystemDisplayMenuScreen(Finch finchRobot)
+        {
+            DisplayHeader("Alarm System");
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("\t(Currently under development.)");
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            DisplayContinuePrompt();
+        }
+        #endregion
 
         #region TALENT SHOW: USER PROGRAMMING
-            static void UserProgrammingDisplayMenuScreen(Finch finchRobot)
-            {
-                DisplayHeader("User Programming");
-                Console.WriteLine();
-                Console.WriteLine();
-                Console.WriteLine();
-                Console.WriteLine("\t(Currently under development.)");
-                Console.WriteLine();
-                Console.WriteLine();
-                Console.WriteLine();
-                DisplayContinuePrompt();
-            }
+        static void UserProgrammingDisplayMenuScreen(Finch finchRobot)
+        {
+            DisplayHeader("User Programming");
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("\t(Currently under development.)");
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            DisplayContinuePrompt();
+        }
         #endregion
 
         #region TALENT SHOW: TUNE 
@@ -664,9 +660,6 @@ namespace Project_FinchControl
         }
         #endregion
 
-
-
-
         #region TALENT SHOW: TUNE 2 
         static void TuneTwo(Finch finchRobot)
         {
@@ -690,7 +683,7 @@ namespace Project_FinchControl
             finchRobot.wait(200);
 
             finchRobot.wait(3000);
-           
+
             finchRobot.noteOn(600);
             finchRobot.wait(200);
             finchRobot.noteOff();
@@ -743,8 +736,6 @@ namespace Project_FinchControl
         }
         #endregion
 
-
-
         #region TALENT SHOW: DANCE 2
         static void DanceTwo(Finch finchRobot)
         {
@@ -752,7 +743,7 @@ namespace Project_FinchControl
 
             finchRobot.setMotors(0, 0);
             finchRobot.wait(1000);
-            
+
             finchRobot.setMotors(150, 150);
             finchRobot.wait(3000);
 
@@ -786,7 +777,6 @@ namespace Project_FinchControl
         }
         #endregion
 
-
         #region TALENT SHOW: LIGHTS 2
         static void ExploreLightsTwo(Finch finchRobot)
         {
@@ -802,6 +792,43 @@ namespace Project_FinchControl
             finchRobot.wait(1000);
         }
         #endregion
-    }
 
+        #region DID YOU LIKE THE FINCH'S SONG
+
+        static void DidYouLikeTheFinchSong(Finch finchRobot)
+
+        {
+            string userResponse;
+            bool songLike = true;
+
+            while (songLike)
+            {
+                System.Console.Write("Did you like the Finch's song and dance? ");
+                userResponse = System.Console.ReadLine();
+
+                if (userResponse == "yes")
+                {
+                    Console.WriteLine(); 
+                    Console.WriteLine("Yay!");
+                    Console.WriteLine();
+                    Console.WriteLine("I'm glad you liked it.");
+                    break;
+                }
+                else if (userResponse == "no")
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("Aww. Well, we are all entitled to our own opinions and like different music.");
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine();
+                    System.Console.Write("I'm sorry, please answer the question more clearly by answering yes or no. ");
+                }
+
+            }
+        }
+
+        #endregion
+    }
 }
