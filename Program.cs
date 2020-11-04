@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using FinchAPI;
 
 
-
 namespace Project_FinchControl
 {
 
