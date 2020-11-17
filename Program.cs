@@ -12,14 +12,37 @@ using HidSharp.ReportDescriptors.Units;
 namespace Project_FinchControl
 {
 
+    /// <summary>
+    /// User commands
+    /// </summary>
+    /// 
+    public enum Command
+    {
+        none,
+        moveforward,
+        movebackward,
+        stopmotors,
+        wait,
+        turnright,
+        turnleft,
+        ledon,
+        ledoff,
+        gettemperature,
+        mixitup,
+        leftlightsensor,
+        rightlightsensor,
+        bothlightsensors,
+        done,
+    }
+
     // **************************************************
     //
     // Title: Finch Control
     // Application Type: Console 
-    // Description: S3 (Alarm System)
+    // Description: S4 (User Programming)
     // Author: Emily Crull
     // Dated Created: 10/2/2020
-    // Last Modified: 11/7/2020
+    // Last Modified: 11/16/2020
     //
     // **************************************************
 
@@ -104,7 +127,7 @@ namespace Project_FinchControl
                         break;
 
                     case "e":
-                        //UserProgrammingDisplayMenuScreen(finchRobot);
+                        UserProgrammingDisplayMenuScreen(finchRobot);
                         break;
 
                     case "f":
@@ -370,11 +393,11 @@ namespace Project_FinchControl
             Console.Clear();
             Console.WriteLine();
             Console.WriteLine();
-            Console.WriteLine("\t\tFinch Control (S3: The Alarm System)");
+            Console.WriteLine("\t\tFinch Control (S4: User Programming)");
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine();
-            Console.WriteLine("\tThis application now has an alarm system feature.");
+            Console.WriteLine("\tThis application now has a feature that allows users to program the Finch.");
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine();
@@ -1348,7 +1371,7 @@ namespace Project_FinchControl
             if (thresholdExceeded)
             {
                 finchRobot.noteOff();
-                Console.WriteLine($"\tThe {rangeType} threshold value was exceeded by the current light sensor value of {currentLightSensorValue}.");
+                Console.WriteLine($"\tThe {rangeType} threshold value of {minMaxThreshold} that you entered exceeded the current light sensor value of {currentLightSensorValue}.");
             }
 
             else
@@ -1377,20 +1400,471 @@ namespace Project_FinchControl
 
         #endregion
 
-        #region TALENT SHOW: USER PROGRAMMING
-        static void userprogrammingdisplaymenuscreen(Finch finchRobot)
+        #region USER PROGRAMMING MENU
+        static void UserProgrammingDisplayMenuScreen(Finch finchRobot)
         {
-            DisplayHeader("User Programming");
-            Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine("\t(Currently under development.)");
-            Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine();
-            DisplayContinuePrompt();
+
+            /// <summary>
+            /// *****************************************************************
+            /// *                    User Programming Menu                      *
+            /// *****************************************************************
+            /// </summary>
+            string menuChoice;
+            bool quitMenu = false;
+
+            //
+            // tuple to store all three command parameters
+            //
+            (int motorSpeed, int redLedBrightness, int blueLedBrightness, int greenLedBrightness, double waitSeconds) commandParameters;
+            commandParameters.motorSpeed = 0;
+            commandParameters.redLedBrightness = 0;
+            commandParameters.greenLedBrightness = 0;
+            commandParameters.blueLedBrightness = 0;
+            commandParameters.waitSeconds = 0;
+
+            List<Command> commands = new List<Command>();
+
+            do
+            {
+
+                DisplayHeader("User Programming Menu");
+
+                //
+                // get user menu choice
+                //
+
+
+                Console.WriteLine("\t a) Set Command Parameters");
+                Console.WriteLine("\t b) Add Commands");
+                Console.WriteLine("\t c) View Commands");
+                Console.WriteLine("\t d) Execute Commands");
+                Console.WriteLine("\t q) Quit");
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.Write("\t\t Enter Choice: ");
+                menuChoice = Console.ReadLine().ToLower();
+
+
+                //
+                // process user menu choice
+                //
+                DisplayContinuePrompt();
+
+
+                switch (menuChoice)
+                {
+                    case "a":
+                        commandParameters = UserProgrammingDisplayGetCommandParameters();
+                        break;
+
+                    case "b":
+                        UserProgrammingDisplayGetFinchCommands(commands);
+                        break;
+
+                    case "c":
+                        UserProgrammingViewFinchCommands(commands);
+                        break;
+
+                    case "d":
+                        UserProgrammingExecuteFinchCommands(finchRobot, commands, commandParameters);
+                        break;
+
+                    case "q":
+                        quitMenu = true;
+                        break;
+
+                    default:
+                        Console.WriteLine();
+                        Console.WriteLine("\tPlease enter a letter for the menu choice.");
+                        DisplayContinuePrompt();
+                        break;
+                }
+
+            } while (!quitMenu);
+
+
+
         }
         #endregion
 
+        #region USER PROGRAMMING: GET COMMAND PARAMETERS
+
+        /// <summary>
+        /// *****************************************************************
+        /// *            USER PROGRAMMING GET COMMAND PARAMETERS            *
+        /// *****************************************************************
+        /// </summary>
+        static (int motorSpeed, int redLedBrightness, int blueLedBrightness, int greenLedBrightness, double waitSeconds) UserProgrammingDisplayGetCommandParameters()
+        {
+
+            DisplayHeader("Command Parameters");
+
+            (int motorSpeed, int redLedBrightness, int blueLedBrightness, int greenLedBrightness, double waitSeconds) commandParameters;
+            commandParameters.motorSpeed = 0;
+            commandParameters.redLedBrightness = 0;
+            commandParameters.blueLedBrightness = 0;
+            commandParameters.greenLedBrightness = 0;
+            commandParameters.waitSeconds = 0;
+
+            commandParameters = GetValidInteger();
+
+
+
+            return commandParameters;
+
+        }
+
+        #endregion
+
+        #region USER PROGRAMMING  GET VALID INTEGER
+        /// <summary>
+        /// *****************************************************************
+        /// *              USER PROGRAMMING GET VALID INTEGER               *
+        /// *****************************************************************
+        /// </summary>       
+        static (int motorSpeed, int redLedBrightness, int blueLedBrightness, int greenLedBrightness, double waitSeconds) GetValidInteger()
+        {
+
+            (int motorSpeed, int redLedBrightness, int blueLedBrightness, int greenLedBrightness, double waitSeconds) commandParameters;
+
+
+            DisplayHeader("Motorspeed");
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.Write("Enter a speed [1 -255]: ");
+            commandParameters.motorSpeed = int.Parse(Console.ReadLine());
+
+
+            if (commandParameters.motorSpeed > 1 && commandParameters.motorSpeed < 256)
+            {
+                Console.WriteLine($"You entered a speed of {commandParameters.motorSpeed}.");
+
+            }
+            else
+            {
+                Console.WriteLine();
+                Console.Write("Please enter a number between 1 -255. ");
+                commandParameters.motorSpeed = int.Parse(Console.ReadLine());
+            };
+
+            DisplayContinuePrompt();
+            Console.Clear();
+
+
+            DisplayHeader("LED Colors");
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.Write("Select an LED value for red: ");
+            commandParameters.redLedBrightness = int.Parse(Console.ReadLine());
+
+
+                if (commandParameters.redLedBrightness >= 0 && commandParameters.redLedBrightness < 255)
+                {
+                    Console.WriteLine($"You entered a value for red of {commandParameters.redLedBrightness}");
+
+                }
+                else
+                {
+                    Console.Write("Please enter a number between 0 - 255. ");
+                    commandParameters.redLedBrightness = int.Parse(Console.ReadLine());
+                };
+
+
+            Console.WriteLine();
+            Console.Write("Select an LED value for green: ");
+            commandParameters.greenLedBrightness = int.Parse(Console.ReadLine());
+
+
+            if (commandParameters.greenLedBrightness >= 0 && commandParameters.greenLedBrightness < 255)
+            {
+                Console.WriteLine($"You entered a value for green of {commandParameters.greenLedBrightness}");
+
+            }
+            else
+            {
+                Console.Write("Please enter a number between 0 - 255. ");
+                commandParameters.greenLedBrightness = int.Parse(Console.ReadLine());
+            };
+
+
+            Console.WriteLine();
+            Console.Write("Select an LED value for blue: ");
+            commandParameters.blueLedBrightness = int.Parse(Console.ReadLine());
+
+
+            if (commandParameters.blueLedBrightness >= 0 && commandParameters.blueLedBrightness < 255)
+            {
+                Console.WriteLine($"You entered a value for blue of {commandParameters.blueLedBrightness}");
+
+            }
+            else
+            {
+                Console.Write("Please enter a number between 0 - 255. ");
+                commandParameters.blueLedBrightness = int.Parse(Console.ReadLine());
+            };
+
+            DisplayContinuePrompt();
+            Console.Clear();
+
+
+            DisplayHeader("Wait Duration");
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.Write("Select a wait duration [in seconds]: ");
+            commandParameters.waitSeconds = double.Parse(Console.ReadLine());
+            Console.WriteLine($"You selected a wait duration of {commandParameters.waitSeconds} seconds");
+
+            Console.WriteLine();
+            DisplayContinuePrompt();
+
+            return commandParameters;
+
+        }
+
+        #endregion
+
+        #region USER PROGRAMMING GET FINCH COMMANDS
+
+        /// <summary>
+        /// *****************************************************************
+        /// *             USER PROGRAMMING GET FINCH COMMANDS               *
+        /// *****************************************************************
+        /// </summary>
+        static void UserProgrammingDisplayGetFinchCommands(List<Command> commands)
+        {
+
+            Command command = Command.none;
+
+            DisplayHeader("Finch Robot Commands");
+            Console.WriteLine();
+            Console.WriteLine();
+
+            //
+            //list commands
+            //
+
+            int commandCount = 1;
+            Console.WriteLine("\tAvailable Commands:");
+            Console.WriteLine();
+            Console.Write("\t ");
+            
+            foreach(string commandName in Enum.GetNames(typeof(Command)))
+            {
+                Console.Write($"\t{commandName.ToLower()}");
+                if (commandCount % 1 == 0) Console.Write("\n\t");
+                commandCount++;
+            }
+            
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            while (command != Command.done)
+            {
+
+                Console.Write("\tEnter a command: ");
+
+                if (Enum.TryParse(Console.ReadLine().ToLower(), out command))
+                {
+                    commands.Add(command);
+                }
+                else 
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("\t********************************************");
+                    Console.WriteLine("\tPlease enter a command from the list above");
+                    Console.WriteLine("\t********************************************");
+                }
+
+
+            }
+
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.Clear();
+
+            DisplayHeader("Finch Robot Commands");
+            Console.WriteLine();
+            UserProgrammingEchoFinchCommands(commands);
+
+            DisplayMenuPrompt("User Programming");
+
+        }
+
+        #endregion
+
+        #region USER PROGRAMMING ECHO FINCH COMMANDS
+
+        /// <summary>
+        /// *****************************************************************
+        /// *                      ECHO FINCH COMMANDS                      *
+        /// *****************************************************************
+        /// </summary> 
+        static void UserProgrammingEchoFinchCommands(List<Command> commands)
+
+        {
+            Console.WriteLine("\tHere is the list of commands that you entered: ");
+            Console.WriteLine();
+            foreach (Command command in commands)
+            {
+                Console.WriteLine($"\t{command}");
+            }
+
+        }
+
+        #endregion
+
+        #region USER PROGRAMMING VIEW FINCH COMMANDS
+        static void UserProgrammingViewFinchCommands(List<Command> commands)
+        {
+
+            DisplayHeader("Finch Robot Commands");
+
+            Console.WriteLine();
+            Console.WriteLine();
+
+            Console.WriteLine("\tThe list of commands that were entered are: ");
+            Console.WriteLine();
+            foreach (Command command in commands)
+            {
+                Console.WriteLine($"\t{command}");
+            }
+
+            DisplayMenuPrompt("User Programming");
+
+        }
+
+        #endregion
+
+        #region USER PROGRAMMING EXECUTE FINCH COMMANDS
+
+        /// <summary>
+        /// *****************************************************************
+        /// *                     EXECUTE FINCH COMMANDS                    *
+        /// *****************************************************************
+        /// </summary>
+
+        static void UserProgrammingExecuteFinchCommands(
+        Finch finchRobot, 
+        List<Command> commands, 
+        (int motorSpeed, int redLedBrightness, int blueLedBrightness, int greenLedBrightness, double waitSeconds) commandParameters)
+        {
+            int motorSpeed = commandParameters.motorSpeed;
+            int redLedBrightness = commandParameters.redLedBrightness;
+            int greenLedBrightness = commandParameters.greenLedBrightness;
+            int blueLedBrightness = commandParameters.blueLedBrightness;
+            int waitMilliSeconds = (int)(commandParameters.waitSeconds * 1000);
+            string commandFeedback = "";
+            const int TURNING_MOTOR_SPEED = 100;
+
+            DisplayHeader("Execute Finch Commands");
+
+            Console.WriteLine("\tThe Finch Robot is ready to execute the list of commands.");
+            DisplayContinuePrompt();
+            Console.Clear();
+
+
+
+            DisplayHeader("Executing Finch Commands...");
+            
+            foreach (Command command in commands)
+            {
+                switch (command)
+                {
+                    case Command.none:
+                        break;
+
+                    case Command.moveforward:
+                        finchRobot.setMotors(motorSpeed, motorSpeed);
+                        commandFeedback = Command.moveforward.ToString();
+                        break;
+
+                    case Command.movebackward:
+                        finchRobot.setMotors(-motorSpeed, -motorSpeed);
+                        commandFeedback = Command.movebackward.ToString();
+                        break;
+
+                    case Command.stopmotors:
+                        finchRobot.setMotors(0, 0);
+                        commandFeedback = Command.stopmotors.ToString();
+                        break;
+
+                    case Command.wait:
+                        finchRobot.wait(waitMilliSeconds);
+                        commandFeedback = Command.wait.ToString();
+                        break;
+
+                    case Command.turnright:
+                        finchRobot.setMotors(TURNING_MOTOR_SPEED, -TURNING_MOTOR_SPEED);
+                        commandFeedback = Command.turnright.ToString();
+                        break;
+
+                    case Command.turnleft:
+                        finchRobot.setMotors(-TURNING_MOTOR_SPEED, TURNING_MOTOR_SPEED);
+                        commandFeedback = Command.turnleft.ToString();
+                        break;
+
+
+                    case Command.ledon:
+                        finchRobot.setLED(redLedBrightness, greenLedBrightness, blueLedBrightness);
+                        commandFeedback = Command.ledon.ToString();
+                        break;
+
+                    case Command.ledoff:
+                        finchRobot.setLED(0,0,0);
+                        commandFeedback = Command.ledoff.ToString();
+                        break;
+
+                    case Command.gettemperature:
+                        commandFeedback = $"Temperature: {((finchRobot.getTemperature()*9/5)+ 32).ToString("n0")}{"\u00B0F"}";
+                        break;
+
+                    case Command.mixitup:
+                        commandFeedback = Command.mixitup.ToString();
+                        Parallel.Invoke(
+                        () => DanceTwo(finchRobot),
+                        () => ExploreLightsTwo(finchRobot),
+                        () => TuneTwo(finchRobot));
+                        break;
+
+                    case Command.leftlightsensor:
+                        finchRobot.getLeftLightSensor();
+                        commandFeedback = $"Left Light Sensor: {finchRobot.getLeftLightSensor()}";
+                        break;
+
+                    case Command.rightlightsensor:
+                        finchRobot.getRightLightSensor();
+                        commandFeedback = $"Right Light Sensor: {finchRobot.getRightLightSensor()}";
+                        break;
+
+                    case Command.bothlightsensors:
+                        commandFeedback = $"Both Light Sensors: {finchRobot.getLeftLightSensor()}(left) and {finchRobot.getLeftLightSensor()}(right)";
+                        break;
+
+
+                    case Command.done:
+                        finchRobot.setLED(0, 0, 0);
+                        finchRobot.setMotors(0, 0);
+                        finchRobot.noteOff();
+                        commandFeedback = "done";
+                        break;
+
+                    default:
+
+                        break;
+
+                }
+
+
+                Console.WriteLine($"\t{commandFeedback}");
+
+            }
+
+            DisplayMenuPrompt("User Programming");
+
+        }
+
+        #endregion
     }
 }
