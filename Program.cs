@@ -1528,107 +1528,178 @@ namespace Project_FinchControl
 
             (int motorSpeed, int redLedBrightness, int blueLedBrightness, int greenLedBrightness, double waitSeconds) commandParameters;
 
+            string motorSpeedEntered;
             bool commandEntered = true;
             DisplayHeader("Motorspeed");
             Console.WriteLine();
             Console.WriteLine();
-            Console.Write("Enter a speed [1 -255]: ");
-            commandParameters.motorSpeed = int.Parse(Console.ReadLine());
 
-            while (commandEntered == true)
+
+            do
             {
-                if (commandParameters.motorSpeed > 1 && commandParameters.motorSpeed < 256)
+                Console.Write("\tPlease select a speed between 1 and 255: ");
+                motorSpeedEntered = Console.ReadLine();
+                commandEntered = int.TryParse(motorSpeedEntered, out commandParameters.motorSpeed);
+
+                while (commandEntered == true)
                 {
-                    Console.WriteLine($"You entered a speed of {commandParameters.motorSpeed}.");
-                    break;
-                }
-                else
-                {
-                    Console.Write("Please enter a number between 1 -255. ");
-                    commandParameters.motorSpeed = int.Parse(Console.ReadLine());
+
+
+                    if (commandParameters.motorSpeed >= 1 && commandParameters.motorSpeed <= 255)
+                    {
+                        Console.WriteLine($"\tYou entered a speed of {commandParameters.motorSpeed}.");
+                        break;
+                    }
+
+                    else
+                    {
+                        Console.Write("\tPlease enter a number between 1-255: ");
+                        motorSpeedEntered = Console.ReadLine();
+                        commandEntered = int.TryParse(motorSpeedEntered, out commandParameters.motorSpeed);
+                    }
                 };
 
-            };
+                if (commandEntered != true)
+                {
+                    Console.WriteLine("\tInvalid response. You must enter a number. ");
+                }
+            } while (commandEntered != true);
 
+
+            Console.WriteLine();
+            Console.WriteLine();
             DisplayContinuePrompt();
             Console.Clear();
 
+
             DisplayHeader("LED Colors");
+            string redValueEntered;
+            string greenValueEntered;
+            string blueValueEntered;
+            
             Console.WriteLine();
             Console.WriteLine();
 
-            Console.Write("Select an LED value for red between 0 and 255: ");
-            commandParameters.redLedBrightness = int.Parse(Console.ReadLine());
-
-            while (commandEntered == true)
+            do
             {
-                if (commandParameters.redLedBrightness >= 0 && commandParameters.redLedBrightness < 256)
-                {
-                    Console.WriteLine($"You entered a value for red of {commandParameters.redLedBrightness}");
-                    break;
+                Console.Write("\tEnter a value for red between 0 and 255: ");
+                redValueEntered = Console.ReadLine();
+                commandEntered = int.TryParse(redValueEntered, out commandParameters.redLedBrightness);
 
-                }
-                else
+                while (commandEntered == true)
                 {
-                    Console.Write("Please enter a number between 0 and 255: ");
-                    commandParameters.redLedBrightness = int.Parse(Console.ReadLine());
+                    if (commandParameters.redLedBrightness >= 0 && commandParameters.redLedBrightness <= 255)
+                    {
+                        Console.WriteLine($"\tYou entered a value for red of {commandParameters.redLedBrightness}.");
+                        break;
+                    }
+
+                    else
+                    {
+                        Console.Write("\tPlease enter a number between 0-255: ");
+                        redValueEntered = Console.ReadLine();
+                        commandEntered = int.TryParse(redValueEntered, out commandParameters.redLedBrightness);
+                    }
                 };
-            };
 
-
-            Console.WriteLine();
-            Console.Write("Select an LED value for green between 0 and 255: ");
-            commandParameters.greenLedBrightness = int.Parse(Console.ReadLine());
-
-            while (commandEntered == true)
-            {
-                if (commandParameters.greenLedBrightness >= 0 && commandParameters.greenLedBrightness < 256)
+                if (commandEntered != true)
                 {
-                    Console.WriteLine($"You entered a value for green of {commandParameters.greenLedBrightness}");
-                    break;
-
+                    Console.WriteLine("\tInvalid response. You must enter a number. ");
                 }
-                else
-                {
-                    Console.Write("Please enter a number between 0 and 255: ");
-                    commandParameters.greenLedBrightness = int.Parse(Console.ReadLine());
-                };
-            };
+            } while (commandEntered != true);
 
 
 
             Console.WriteLine();
-            Console.Write("Select an LED value for blue between 0 and 255: ");
-            commandParameters.blueLedBrightness = int.Parse(Console.ReadLine());
+            Console.WriteLine();
 
-
-            while (commandEntered == true)
+            do
             {
-                if (commandParameters.blueLedBrightness >= 0 && commandParameters.blueLedBrightness < 256)
-                {
-                    Console.WriteLine($"You entered a value for blue of {commandParameters.blueLedBrightness}");
-                    break;
+                Console.Write("\tEnter a value for green between 0 and 255: ");
+                greenValueEntered = Console.ReadLine();
+                commandEntered = int.TryParse(greenValueEntered, out commandParameters.greenLedBrightness);
 
-                }
-                else
+                while (commandEntered == true)
                 {
-                    Console.Write("Please enter a number between 0 and 255: ");
-                    commandParameters.blueLedBrightness = int.Parse(Console.ReadLine());
+                    if (commandParameters.greenLedBrightness >= 0 && commandParameters.greenLedBrightness <= 255)
+                    {
+                        Console.WriteLine($"\tYou entered a value for green of {commandParameters.greenLedBrightness}.");
+                        break;
+                    }
+
+                    else
+                    {
+                        Console.Write("\tPlease enter a number between 0-255: ");
+                        greenValueEntered = Console.ReadLine();
+                        commandEntered = int.TryParse(greenValueEntered, out commandParameters.greenLedBrightness);
+                    }
                 };
-            };
+
+                if (commandEntered != true)
+                {
+                    Console.WriteLine("\tInvalid response. You must enter a number. ");
+                }
+            } while (commandEntered != true);
 
 
+            Console.WriteLine();
+            Console.WriteLine();
+
+
+            do
+            {
+                Console.Write("\tEnter a value for blue between 0 and 255: ");
+                blueValueEntered = Console.ReadLine();
+                commandEntered = int.TryParse(blueValueEntered, out commandParameters.blueLedBrightness);
+
+                while (commandEntered == true)
+                {
+                    if (commandParameters.blueLedBrightness >= 0 && commandParameters.blueLedBrightness <= 255)
+                    {
+                        Console.WriteLine($"\tYou entered a value for blue of {commandParameters.blueLedBrightness}.");
+                        break;
+                    }
+
+                    else
+                    {
+                        Console.Write("\tPlease enter a number between 0-255: ");
+                        blueValueEntered = Console.ReadLine();
+                        commandEntered = int.TryParse(blueValueEntered, out commandParameters.blueLedBrightness);
+                    }
+                };
+
+                if (commandEntered != true)
+                {
+                    Console.WriteLine("\tInvalid response. You must enter a number. ");
+                }
+            } while (commandEntered != true);
+            Console.WriteLine();
+            Console.WriteLine();
             DisplayContinuePrompt();
             Console.Clear();
 
 
             DisplayHeader("Wait Duration");
+            string waitEntered;
             Console.WriteLine();
             Console.WriteLine();
-            Console.Write("Select a wait duration [in seconds]: ");
-            commandParameters.waitSeconds = double.Parse(Console.ReadLine());
-            Console.WriteLine($"You selected a wait duration of {commandParameters.waitSeconds} seconds");
 
+
+            do
+            {
+                Console.Write("\tSelect a wait duration [in seconds]: ");
+                waitEntered = Console.ReadLine();
+                commandEntered = double.TryParse(waitEntered, out commandParameters.waitSeconds);
+
+                if (commandEntered != true)
+                {
+                    Console.WriteLine("\tInvalid response. You must enter a number. ");
+                }   
+                    
+            } while (commandEntered != true);
+
+            Console.WriteLine($"\tYou have entered a wait duration of {commandParameters.waitSeconds} seconds.");
+            Console.WriteLine();
             Console.WriteLine();
             DisplayContinuePrompt();
 
