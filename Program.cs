@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
+using System.Text;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
@@ -67,8 +69,7 @@ namespace Project_FinchControl
         /// </summary>
         static void SetTheme()
         {
-            Console.ForegroundColor = ConsoleColor.DarkBlue;
-            Console.BackgroundColor = ConsoleColor.Yellow;
+            DisplaySetThemeAtBeginning();
         }
 
         #region MAIN MENU
@@ -98,8 +99,9 @@ namespace Project_FinchControl
                 Console.WriteLine("\tc) Data Recorder");
                 Console.WriteLine("\td) Alarm System");
                 Console.WriteLine("\te) User Programming");
-                Console.WriteLine("\tf) Disconnect Finch Robot");
-                Console.WriteLine("\tg) Exit");
+                Console.WriteLine("\tf) Application Settings");
+                Console.WriteLine("\tg) Disconnect Finch Robot");
+                Console.WriteLine("\th) Exit");
                 Console.WriteLine();
                 Console.WriteLine();
                 Console.Write("\t\tEnter Choice: ");
@@ -131,10 +133,14 @@ namespace Project_FinchControl
                         break;
 
                     case "f":
-                        DisplayDisconnectFinchRobot(finchRobot);
+                        ApplicationSettingsMenu();
                         break;
 
                     case "g":
+                        DisplayDisconnectFinchRobot(finchRobot);
+                        break;
+
+                    case "h":
                         DisplayDisconnectFinchRobot(finchRobot);
                         quitApplication = true;
                         break;
@@ -390,20 +396,24 @@ namespace Project_FinchControl
         {
             Console.CursorVisible = false;
 
+          
             Console.Clear();
             Console.WriteLine();
             Console.WriteLine();
-            Console.WriteLine("\t\tFinch Control (S4: User Programming)");
+            Console.WriteLine("\t\tFinch Control (S5: Persistence)");
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine();
-            Console.WriteLine("\tThis application now has a feature that allows users to program the Finch.");
+            Console.WriteLine("\tUsers can now read/write to files and save their settings.");
             Console.WriteLine();
             Console.WriteLine();
+            DisplayThemeSettingsReadFromFile();
             Console.WriteLine();
             Console.WriteLine();
             DisplayContinuePrompt();
         }
+
+
 
         /// <summary>
         /// *****************************************************************
@@ -1576,7 +1586,7 @@ namespace Project_FinchControl
             string redValueEntered;
             string greenValueEntered;
             string blueValueEntered;
-            
+
             Console.WriteLine();
             Console.WriteLine();
 
@@ -1694,8 +1704,8 @@ namespace Project_FinchControl
                 if (commandEntered != true)
                 {
                     Console.WriteLine("\tInvalid response. You must enter a number. ");
-                }   
-                    
+                }
+
             } while (commandEntered != true);
 
             Console.WriteLine($"\tYou have entered a wait duration of {commandParameters.waitSeconds} seconds.");
@@ -1733,14 +1743,14 @@ namespace Project_FinchControl
             Console.WriteLine("\tAvailable Commands:");
             Console.WriteLine();
             Console.Write("\t ");
-            
-            foreach(string commandName in Enum.GetNames(typeof(Command)))
+
+            foreach (string commandName in Enum.GetNames(typeof(Command)))
             {
                 Console.Write($"\t{commandName.ToLower()}");
                 if (commandCount % 1 == 0) Console.Write("\n\t");
                 commandCount++;
             }
-            
+
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine();
@@ -1753,7 +1763,7 @@ namespace Project_FinchControl
                 {
                     commands.Add(command);
                 }
-                else 
+                else
                 {
                     Console.WriteLine();
                     Console.WriteLine("\t********************************************");
@@ -1831,8 +1841,8 @@ namespace Project_FinchControl
         /// </summary>
 
         static void UserProgrammingExecuteFinchCommands(
-        Finch finchRobot, 
-        List<Command> commands, 
+        Finch finchRobot,
+        List<Command> commands,
         (int motorSpeed, int redLedBrightness, int blueLedBrightness, int greenLedBrightness, double waitSeconds) commandParameters)
         {
             int motorSpeed = commandParameters.motorSpeed;
@@ -1852,7 +1862,7 @@ namespace Project_FinchControl
 
 
             DisplayHeader("Executing Finch Commands...");
-            
+
             foreach (Command command in commands)
             {
                 switch (command)
@@ -1897,12 +1907,12 @@ namespace Project_FinchControl
                         break;
 
                     case Command.ledoff:
-                        finchRobot.setLED(0,0,0);
+                        finchRobot.setLED(0, 0, 0);
                         commandFeedback = Command.ledoff.ToString();
                         break;
 
                     case Command.gettemperature:
-                        commandFeedback = $"Temperature: {((finchRobot.getTemperature()*9/5)+ 32).ToString("n0")}{"\u00B0F"}";
+                        commandFeedback = $"Temperature: {((finchRobot.getTemperature() * 9 / 5) + 32).ToString("n0")}{"\u00B0F"}";
                         break;
 
                     case Command.mixitup:
@@ -1950,6 +1960,315 @@ namespace Project_FinchControl
 
         }
 
+        #endregion
+
+        #region APPLICATION SETTINGS MENU
+
+
+
+
+
+
+
+        /// <summary>
+        /// *****************************************************************
+        /// *                     Applications Setting Menu                                 *
+        /// *****************************************************************
+        /// </summary>
+
+        static void ApplicationSettingsMenu()
+        {
+
+
+            Console.CursorVisible = true;
+
+            bool quitMenu = false;
+            string menuChoice;
+
+
+            do
+            {
+                DisplayHeader("Application Settings");
+                Console.WriteLine("");
+  
+                Console.WriteLine("\ta) Set Theme");
+                Console.WriteLine("\tq) Main Menu");
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.Write("\t\tEnter Choice: ");
+                menuChoice = Console.ReadLine().ToLower();
+
+                //
+                // process user menu choice
+                //
+                switch (menuChoice)
+                {
+                    case "a":
+                        DisplaySetTheme();
+                        break;
+
+                    case "q":
+                        quitMenu = true;
+                        break;
+
+                    default:
+                        Console.WriteLine();
+                        Console.WriteLine("\tPlease enter a letter for the menu choice.");
+                        DisplayContinuePrompt();
+                        break;
+                }
+
+            } while (!quitMenu);
+
+        }
+
+        #endregion
+
+        #region LOAD PREVIOUS THEME SETTINGS AT BEGINNING OF APPLICATION
+
+        /// <summary>
+        /// *****************************************************************
+        /// *                Load Previous Theme Settings                   *
+        /// *****************************************************************
+        /// 
+        /// Set the application theme last saved by the user without prompting 
+        /// them to reset it when they start the application.
+        ///
+        /// </summary>
+        static void DisplaySetThemeAtBeginning()
+        {
+
+            (ConsoleColor foregroundColor, ConsoleColor backgroundColor) themeColors;
+            string fileIOStatusMessage;
+            themeColors = ReadThemeData(out fileIOStatusMessage);
+            Console.ForegroundColor = themeColors.foregroundColor;
+            Console.BackgroundColor = themeColors.backgroundColor;
+        }
+        #endregion
+
+        #region DISPLAY READ MESSAGE AT BEGINNING OF APPLICATION
+
+        static void DisplayThemeSettingsReadFromFile()
+        {
+
+            (ConsoleColor foregroundColor, ConsoleColor backgroundColor) themeColors;
+            string fileIOStatusMessage;
+            Console.SetCursorPosition(10, 10);
+            themeColors = ReadThemeData(out fileIOStatusMessage);
+            Console.ForegroundColor = themeColors.foregroundColor;
+            Console.BackgroundColor = themeColors.backgroundColor;
+        }
+
+
+        #endregion
+
+        #region SET NEW APPLICATION THEME
+
+        /// <summary>
+        /// *****************************************************************
+        /// *                   Set New Application Theme                   *
+        /// *****************************************************************
+        /// 
+        /// Ask the user if they want to set a new application theme.
+        ///
+        /// </summary>
+
+        static void DisplaySetTheme()
+        {
+
+            (ConsoleColor foregroundColor, ConsoleColor backgroundColor) themeColors;
+            bool themeChosen = false;
+            string fileIOStatusMessage;
+            string setThemeAnswer;
+            themeColors = ReadThemeData(out fileIOStatusMessage);
+            Console.ForegroundColor = themeColors.foregroundColor;
+            Console.BackgroundColor = themeColors.backgroundColor;
+            Console.Clear();
+            DisplayHeader("Set New Theme");
+            Console.WriteLine();
+            Console.WriteLine(fileIOStatusMessage);
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine($"\t Current foreground color: {Console.ForegroundColor}");
+            Console.WriteLine($"\t Current foreground color: {Console.BackgroundColor}");
+            Console.WriteLine();
+            Console.WriteLine();
+
+
+            do
+
+            {
+                Console.Write("\tWould you like to change the current theme (yes/no)? ");
+                setThemeAnswer = Console.ReadLine().ToLower();
+
+
+                if (setThemeAnswer == "no")
+                {
+                    WriteThemeData(themeColors.foregroundColor, themeColors.backgroundColor);
+                    break;
+                }
+                else if (!themeChosen)
+                {
+                    Console.WriteLine("\tYou need to select yes or no.");
+                };
+
+                if (setThemeAnswer == "yes")
+                {
+                    Console.Clear();
+                    DisplayHeader("Set Theme");
+                    do
+                    {
+                        themeColors.foregroundColor = GetThemeColorFromUser("foreground");
+                        themeColors.backgroundColor = GetThemeColorFromUser("background");
+
+                        //
+                        // set new theme
+                        //
+                        Console.ForegroundColor = themeColors.foregroundColor;
+                        Console.BackgroundColor = themeColors.backgroundColor;
+
+                        Console.Clear();
+
+                        DisplayHeader("Set Theme");
+                        Console.WriteLine($"\tNew foreground color: {Console.ForegroundColor}");
+                        Console.WriteLine($"\tNew background color: {Console.BackgroundColor}");
+
+                        Console.WriteLine();
+                        Console.Write("\tWould you like to keep this theme? ");
+
+                        if (Console.ReadLine().ToLower() == "yes")
+                        {
+                            themeChosen = true;
+                            WriteThemeData(themeColors.foregroundColor, themeColors.backgroundColor);
+                        }
+                    } while (!themeChosen);
+                }
+            } while (!themeChosen);
+
+            Console.WriteLine();
+            Console.WriteLine();
+            DisplayContinuePrompt();
+        }
+        #endregion
+
+        #region GET THEME COLOR FROM USER
+
+        /// <summary>
+        /// *****************************************************************
+        /// *                       Get Color Settings                      *
+        /// *****************************************************************
+        ///
+        /// Asking for and validating console colors from the user.
+        /// 
+        /// </summary>
+        static ConsoleColor GetThemeColorFromUser(string property)
+        {
+
+            ConsoleColor consoleColor;
+            bool validConsoleColor;
+
+            do
+            {
+                Console.Write($"\tEnter a value for the {property}: ");
+                validConsoleColor = Enum.TryParse<ConsoleColor>(Console.ReadLine(), true, out consoleColor);
+
+
+                if (!validConsoleColor)
+                {
+
+                    Console.WriteLine("\tYou did not provide a valid color. Please enter a valid color.\n");
+                }
+                else
+                {
+                    validConsoleColor = true;
+                }
+            } while (!validConsoleColor);
+
+            return consoleColor;
+        }
+
+
+        #endregion
+
+        #region READ THEME COLOR DATA
+
+        /// <summary>
+        /// *****************************************************************
+        /// *                    Read Color Data from File                  *
+        /// *****************************************************************
+        /// 
+        /// Read console color data to file, validating if the data is successfully written or not
+        /// 
+        /// </summary>
+        static (ConsoleColor foregroundColor, ConsoleColor backgroundColor) ReadThemeData(out string fileIOStatusMessage)
+        {
+            string dataPath = @"Data/Theme.txt";
+            string[] themeColors;
+
+            ConsoleColor foregroundColor = ConsoleColor.White;
+            ConsoleColor backgroundColor = ConsoleColor.Green;
+
+
+            try
+            {
+                themeColors = File.ReadAllLines(dataPath);
+               
+                if (Enum.TryParse(themeColors[0], true, out foregroundColor) &&
+                Enum.TryParse(themeColors[1], true, out backgroundColor))
+                {
+                    fileIOStatusMessage = "(Last saved theme settings successfully loaded.)";
+                }
+                else 
+                {
+                    fileIOStatusMessage = "(Unable to load settings. Data file incorrectly formatted.)";
+                }
+            }
+            catch (DirectoryNotFoundException)
+            {
+                fileIOStatusMessage = "(Unable to locate the folder with last saved theme settings.)";
+            }
+
+            catch (Exception)
+            {
+                fileIOStatusMessage = "Unable to read the data file.";
+            }
+
+            Console.WriteLine(fileIOStatusMessage);
+            return (foregroundColor, backgroundColor);
+        }
+        #endregion
+
+        #region WRITE THEME COLOR DATA
+
+        /// <summary>
+        /// *****************************************************************
+        /// *                    Write Color Data from File                 *
+        /// *****************************************************************
+        /// 
+        /// Write console color data to file, validating if the data is successfully written or not
+        /// 
+        /// </summary>
+        static string WriteThemeData(ConsoleColor foregroundColor, ConsoleColor backgroundColor)
+        {
+            string dataPath = @"Data/Theme.txt";
+            string fileIOStatusMessage = "";
+
+            try
+            {
+                File.WriteAllText(dataPath, foregroundColor.ToString() + "\r\n" + backgroundColor.ToString());
+                fileIOStatusMessage = "\tYour changes have been saved. ";
+            }
+            catch (DirectoryNotFoundException)
+            {
+                fileIOStatusMessage = "\tCannot locate the directory to save your changes. ";
+            }
+            catch (Exception)
+            {
+                fileIOStatusMessage = "\t Unable to save changes. ";
+            }
+            Console.Write(fileIOStatusMessage);
+            return fileIOStatusMessage;
+        }
         #endregion
     }
 }
